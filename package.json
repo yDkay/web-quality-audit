@@ -1,0 +1,58 @@
+{
+  "name": "web-quality-audit",
+  "version": "1.0.0",
+  "description": "A comprehensive website quality audit tool covering accessibility, SEO, and best practices — powered by Cypress and Playwright.",
+  "main": "dist/cli.js",
+  "bin": {
+    "web-quality-audit": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "audit": "ts-node src/cli.ts",
+    "audit:accessibility": "ts-node src/cli.ts --category accessibility",
+    "audit:seo": "ts-node src/cli.ts --category seo",
+    "audit:best-practices": "ts-node src/cli.ts --category best-practices",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "pw:run": "npx playwright test",
+    "pw:run:ui": "npx playwright test --ui",
+    "pw:report": "npx playwright show-report",
+    "demo": "npx serve demo -p 3939",
+    "report": "ts-node src/reporter/generate.ts",
+    "lint": "eslint . --ext .ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "accessibility",
+    "a11y",
+    "seo",
+    "audit",
+    "wcag",
+    "cypress",
+    "playwright",
+    "testing",
+    "quality",
+    "web-audit"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@axe-core/playwright": "^4.11.1",
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^20.11.0",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "axe-core": "^4.8.0",
+    "cypress": "^13.6.0",
+    "cypress-axe": "^1.5.0",
+    "eslint": "^8.56.0",
+    "serve": "^14.2.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.3.0",
+    "wait-on": "^9.0.4"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^12.0.0"
+  }
+}

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<!-- 
+  WEB QUALITY AUDIT - DEMO PAGE
+  This page contains INTENTIONAL issues for testing purposes.
+  Each issue is marked with a comment explaining what's wrong.
+-->
+
+<!-- ISSUE: Missing lang attribute on <html> -->
+<html>
+<head>
+  <!-- ISSUE: Meta title too short -->
+  <title>Hi</title>
+
+  <!-- ISSUE: Missing meta description -->
+  <!-- ISSUE: Missing viewport meta tag -->
+
+  <!-- ISSUE: Missing Open Graph tags -->
+  <!-- ISSUE: Missing Twitter Card tags -->
+  <!-- ISSUE: Missing canonical URL -->
+  <!-- ISSUE: Missing favicon -->
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      /* ISSUE: Low contrast body text - light gray on white */
+      color: #aaaaaa;
+      background: #ffffff;
+    }
+
+    .hero {
+      padding: 60px 20px;
+      /* ISSUE: Low contrast - light text on light background */
+      background: #f5f5f5;
+      text-align: center;
+    }
+
+    .hero h3 {
+      /* ISSUE: First heading is h3, skipping h1 and h2 */
+      font-size: 32px;
+      color: #cccccc; /* ISSUE: Very low contrast */
+    }
+
+    .hero p {
+      font-size: 18px;
+      margin-top: 12px;
+    }
+
+    nav {
+      background: #333;
+      padding: 10px 20px;
+      display: flex;
+      gap: 15px;
+    }
+
+    nav a {
+      color: #555; /* ISSUE: Low contrast - dark gray on dark background */
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .content {
+      padding: 40px 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* ISSUE: No h2 used, jumps to h4 */
+    .content h4 {
+      font-size: 22px;
+      color: #333;
+      margin-bottom: 16px;
+    }
+
+    .card {
+      border: 1px solid #eee;
+      padding: 20px;
+      margin: 16px 0;
+      border-radius: 8px;
+    }
+
+    .card img {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .form-section {
+      margin-top: 40px;
+      padding: 30px;
+      background: #fafafa;
+      border-radius: 8px;
+    }
+
+    .form-section input,
+    .form-section textarea {
+      display: block;
+      width: 100%;
+      max-width: 400px;
+      padding: 8px 12px;
+      margin: 8px 0 16px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    /* ISSUE: Button too small for touch targets */
+    .tiny-button {
+      padding: 2px 6px;
+      font-size: 10px;
+      border: 1px solid #999;
+      background: #eee;
+      cursor: pointer;
+      color: #ccc; /* ISSUE: Low contrast button text */
+    }
+
+    .cta-button {
+      padding: 12px 24px;
+      font-size: 16px;
+      background: #4a90d9;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    footer {
+      background: #222;
+      color: #444; /* ISSUE: Low contrast footer text */
+      padding: 30px 20px;
+      text-align: center;
+      margin-top: 60px;
+    }
+
+    footer a {
+      color: #555; /* ISSUE: Low contrast footer links */
+    }
+
+    /* ISSUE: No responsive styles / no media queries */
+  </style>
+</head>
+<body>
+
+  <nav>
+    <!-- ISSUE: Link text is not descriptive -->
+    <a href="#">Click here</a>
+    <a href="#">Read more</a>
+    <a href="#">Link</a>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
+  </nav>
+
+  <div class="hero">
+    <!-- ISSUE: Heading hierarchy - starts with h3, skipping h1 and h2 -->
+    <h3>Welcome to Our Amazing Product</h3>
+    <p>The best solution for all your needs. Start today and see the difference.</p>
+    <!-- ISSUE: No CTA button in the hero / above the fold -->
+  </div>
+
+  <main class="content">
+    <!-- ISSUE: Skips from h3 to h4 (h3 in hero, h4 here, no h1 or h2 anywhere) -->
+    <h4>Our Features</h4>
+
+    <div class="card">
+      <!-- ISSUE: Image with no alt text -->
+      <img src="https://placehold.co/400x200" />
+      <h6>Feature One</h6> <!-- ISSUE: h6 after h4, skipping h5 -->
+      <p>This feature is great and you should use it.</p>
+    </div>
+
+    <div class="card">
+      <!-- ISSUE: Image with empty alt text when it's not decorative -->
+      <img src="https://placehold.co/400x200" alt="" />
+      <h4>Feature Two</h4>
+      <p>Another amazing feature that solves problems.</p>
+      <!-- ISSUE: Broken image -->
+      <img src="/images/nonexistent-screenshot.png" alt="Screenshot of feature two" />
+    </div>
+
+    <div class="card">
+      <!-- ISSUE: Image with useless alt text -->
+      <img src="https://placehold.co/400x200" alt="image" />
+      <h4>Feature Three</h4>
+      <p>
+        Learn more about this by
+        <!-- ISSUE: Generic link text -->
+        <a href="/feature-three">clicking here</a>.
+      </p>
+    </div>
+
+    <!-- ISSUE: Multiple h3 used inconsistently -->
+    <h3>Testimonials</h3>
+    <div class="card">
+      <p>"This product changed my life!" - Happy Customer</p>
+    </div>
+
+    <div class="form-section">
+      <h4>Contact Us</h4>
+
+      <!-- ISSUE: Form has no action attribute -->
+      <form>
+        <!-- ISSUE: Input without associated label -->
+        <input type="text" placeholder="Your name" />
+
+        <!-- ISSUE: Input without label, wrong type (text instead of email) -->
+        <input type="text" placeholder="Your email" />
+
+        <!-- ISSUE: No autocomplete attributes -->
+        <input type="text" placeholder="Phone number" />
+
+        <!-- ISSUE: Textarea without label -->
+        <textarea rows="4" placeholder="Message"></textarea>
+
+        <!-- ISSUE: Submit button is tiny (touch target too small) -->
+        <button class="tiny-button" type="submit">Go</button>
+      </form>
+    </div>
+
+    <!-- ISSUE: Broken link -->
+    <p>Read our <a href="/privacy-policy">Privacy Policy</a> and <a href="/terms-of-service">Terms of Service</a>.</p>
+
+    <!-- ISSUE: Link opens in new tab without warning -->
+    <p>Visit our <a href="https://example.com" target="_blank">partner site</a>.</p>
+
+    <!-- ISSUE: Empty link -->
+    <a href=""></a>
+
+    <!-- ISSUE: Inline event handler -->
+    <button onclick="alert('hello')">Click me</button>
+
+    <!-- ISSUE: Auto-playing content would go here in a real scenario -->
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Demo Company. All rights reserved.</p>
+    <p><a href="#">Back to top</a> | <a href="#">Sitemap</a></p>
+    <!-- ISSUE: No structured data / JSON-LD anywhere on the page -->
+  </footer>
+
+  <!-- ISSUE: Console errors for demonstration -->
+  <script>
+    console.error('Uncaught TypeError: Cannot read property "value" of undefined');
+    console.warn('Deprecation warning: This API will be removed in future versions');
+    // ISSUE: Referencing undefined variable to trigger real console error
+    undefinedFunction();
+  </script>
+
+</body>
+</html>
