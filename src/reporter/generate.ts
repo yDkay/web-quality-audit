@@ -1,6 +1,11 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import { AuditCheck, Category, CategorySummary, SEVERITY_WEIGHT } from '../types';
+import * as fs from "fs";
+import * as path from "path";
+import {
+  AuditCheck,
+  Category,
+  CategorySummary,
+  SEVERITY_WEIGHT,
+} from "../types";
 
 interface RawAuditData {
   url: string;
@@ -10,19 +15,20 @@ interface RawAuditData {
 }
 
 function loadResults(outputDir: string): RawAuditData | null {
-  const dataDir = path.join(outputDir, 'data');
+  const dataDir = path.join(outputDir, "data");
 
   if (!fs.existsSync(dataDir)) {
-    console.log('No audit data found');
+    console.log("No audit data found");
     return null;
   }
 
-  const files = fs.readdirSync(dataDir)
-    .filter((f) => f.endsWith('.json'))
+  const files = fs
+    .readdirSync(dataDir)
+    .filter((f) => f.endsWith(".json"))
     .sort();
 
   if (files.length === 0) {
-    console.log('No audit result files found');
+    console.log("No audit result files found");
     return null;
   }
 
@@ -30,13 +36,13 @@ function loadResults(outputDir: string): RawAuditData | null {
   // Each spec file (accessibility, seo, best-practices) saves its own JSON,
   // so we combine all checks from every file.
   const allChecks: AuditCheck[] = [];
-  let url = '';
-  let timestamp = '';
-  let framework = '';
+  let url = "";
+  let timestamp = "";
+  let framework = "";
 
   for (const file of files) {
     const filePath = path.join(dataDir, file);
-    const raw = JSON.parse(fs.readFileSync(filePath, 'utf-8')) as RawAuditData;
+    const raw = JSON.parse(fs.readFileSync(filePath, "utf-8")) as RawAuditData;
 
     allChecks.push(...raw.checks);
 
@@ -46,7 +52,9 @@ function loadResults(outputDir: string): RawAuditData | null {
     framework = raw.framework || framework;
   }
 
-  console.log(`Loaded ${files.length} result file(s) with ${allChecks.length} total checks`);
+  console.log(
+    `Loaded ${files.length} result file(s) with ${allChecks.length} total checks`,
+  );
 
   return {
     url,
@@ -56,11 +64,14 @@ function loadResults(outputDir: string): RawAuditData | null {
   };
 }
 
-function calculateSummary(checks: AuditCheck[], category: Category): CategorySummary {
+function calculateSummary(
+  checks: AuditCheck[],
+  category: Category,
+): CategorySummary {
   const categoryChecks = checks.filter((c) => c.category === category);
-  const passed = categoryChecks.filter((c) => c.status === 'pass').length;
-  const failed = categoryChecks.filter((c) => c.status === 'fail').length;
-  const warnings = categoryChecks.filter((c) => c.status === 'warning').length;
+  const passed = categoryChecks.filter((c) => c.status === "pass").length;
+  const failed = categoryChecks.filter((c) => c.status === "fail").length;
+  const warnings = categoryChecks.filter((c) => c.status === "warning").length;
   const total = categoryChecks.length;
 
   // Score: each check contributes its severity weight to the max possible score.
@@ -71,33 +82,36 @@ function calculateSummary(checks: AuditCheck[], category: Category): CategorySum
   categoryChecks.forEach((check) => {
     maxScore += SEVERITY_WEIGHT[check.severity];
 
-    if (check.status === 'fail') {
+    if (check.status === "fail") {
       deductions += SEVERITY_WEIGHT[check.severity];
-    } else if (check.status === 'warning') {
+    } else if (check.status === "warning") {
       deductions += SEVERITY_WEIGHT[check.severity] * 0.5;
     }
   });
 
-  const score = maxScore > 0 ? Math.max(0, Math.round(((maxScore - deductions) / maxScore) * 100)) : 100;
+  const score =
+    maxScore > 0
+      ? Math.max(0, Math.round(((maxScore - deductions) / maxScore) * 100))
+      : 100;
 
   return { category, total, passed, failed, warnings, score };
 }
 
 function getScoreColor(score: number): string {
-  if (score >= 90) return '#22c55e';
-  if (score >= 70) return '#eab308';
-  if (score >= 50) return '#f97316';
-  return '#ef4444';
+  if (score >= 90) return "#22c55e";
+  if (score >= 70) return "#eab308";
+  if (score >= 50) return "#f97316";
+  return "#ef4444";
 }
 
 function getSeverityBadge(severity: string): string {
   const colors: Record<string, string> = {
-    critical: '#ef4444',
-    warning: '#f97316',
-    info: '#3b82f6',
+    critical: "#ef4444",
+    warning: "#f97316",
+    info: "#3b82f6",
   };
   return `<span style="
-    background: ${colors[severity] || '#6b7280'};
+    background: ${colors[severity] || "#6b7280"};
     color: white;
     padding: 2px 8px;
     border-radius: 4px;
@@ -108,26 +122,28 @@ function getSeverityBadge(severity: string): string {
 }
 
 function getStatusIcon(status: string): string {
-  if (status === 'pass') return '✅';
-  if (status === 'fail') return '❌';
-  return '⚠️';
+  if (status === "pass") return "✅";
+  if (status === "fail") return "❌";
+  return "⚠️";
 }
 
 function generateHtml(data: RawAuditData): string {
-  const categories: Category[] = ['accessibility', 'seo', 'best-practices'];
+  const categories: Category[] = ["accessibility", "seo", "best-practices"];
   const summaries = categories.map((cat) => calculateSummary(data.checks, cat));
   const overallScore = Math.round(
-    summaries.reduce((acc, s) => acc + s.score, 0) / summaries.length
+    summaries.reduce((acc, s) => acc + s.score, 0) / summaries.length,
   );
 
   const categoryLabels: Record<Category, string> = {
-    accessibility: 'Accessibility',
-    seo: 'SEO',
-    'best-practices': 'Best Practices',
+    accessibility: "Accessibility",
+    seo: "SEO",
+    "best-practices": "Best Practices",
   };
 
-  const failedChecks = data.checks.filter((c) => c.status === 'fail');
-  const criticalCount = failedChecks.filter((c) => c.severity === 'critical').length;
+  const failedChecks = data.checks.filter((c) => c.status === "fail");
+  const criticalCount = failedChecks.filter(
+    (c) => c.severity === "critical",
+  ).length;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -397,15 +413,19 @@ function generateHtml(data: RawAuditData): string {
       <div class="score-card">
         <div class="score" style="color: ${getScoreColor(overallScore)}">${overallScore}</div>
         <div class="label">Overall Score</div>
-        <div class="stats">${criticalCount} critical issue${criticalCount !== 1 ? 's' : ''}</div>
+        <div class="stats">${criticalCount} critical issue${criticalCount !== 1 ? "s" : ""}</div>
       </div>
-      ${summaries.map((s) => `
+      ${summaries
+        .map(
+          (s) => `
       <div class="score-card">
         <div class="score" style="color: ${getScoreColor(s.score)}">${s.score}</div>
         <div class="label">${categoryLabels[s.category]}</div>
         <div class="stats">${s.passed} pass | ${s.failed} fail | ${s.warnings} warn</div>
       </div>
-      `).join('')}
+      `,
+        )
+        .join("")}
     </div>
 
     <div class="summary-bar">
@@ -414,7 +434,7 @@ function generateHtml(data: RawAuditData): string {
         <div class="label">Total Checks</div>
       </div>
       <div class="summary-stat">
-        <div class="value" style="color: #22c55e">${data.checks.filter((c) => c.status === 'pass').length}</div>
+        <div class="value" style="color: #22c55e">${data.checks.filter((c) => c.status === "pass").length}</div>
         <div class="label">Passed</div>
       </div>
       <div class="summary-stat">
@@ -435,24 +455,28 @@ function generateHtml(data: RawAuditData): string {
       <button class="filter-btn" onclick="filterChecks('warning', this)">🟡 Warning</button>
     </div>
 
-    ${categories.map((cat) => {
-      const catChecks = data.checks.filter((c) => c.category === cat);
-      if (catChecks.length === 0) return '';
+    ${categories
+      .map((cat) => {
+        const catChecks = data.checks.filter((c) => c.category === cat);
+        if (catChecks.length === 0) return "";
 
-      // Sort: failed critical first, then failed warnings, then passed
-      catChecks.sort((a, b) => {
-        const statusOrder = { fail: 0, warning: 1, pass: 2 };
-        const sevOrder = { critical: 0, warning: 1, info: 2 };
-        const statusDiff = (statusOrder[a.status] ?? 2) - (statusOrder[b.status] ?? 2);
-        if (statusDiff !== 0) return statusDiff;
-        return (sevOrder[a.severity] ?? 2) - (sevOrder[b.severity] ?? 2);
-      });
+        // Sort: failed critical first, then failed warnings, then passed
+        catChecks.sort((a, b) => {
+          const statusOrder = { fail: 0, warning: 1, pass: 2 };
+          const sevOrder = { critical: 0, warning: 1, info: 2 };
+          const statusDiff =
+            (statusOrder[a.status] ?? 2) - (statusOrder[b.status] ?? 2);
+          if (statusDiff !== 0) return statusDiff;
+          return (sevOrder[a.severity] ?? 2) - (sevOrder[b.severity] ?? 2);
+        });
 
-      return `
+        return `
     <div class="category-section">
       <h2 class="category-header">${categoryLabels[cat]}</h2>
       <div class="check-list">
-        ${catChecks.map((check, i) => `
+        ${catChecks
+          .map(
+            (check, i) => `
         <div class="check-item ${check.status}" data-status="${check.status}" data-severity="${check.severity}">
           <div class="check-header" onclick="toggleDetails('${cat}-${i}')">
             <span>${getStatusIcon(check.status)}</span>
@@ -462,21 +486,24 @@ function generateHtml(data: RawAuditData): string {
           <div class="check-details" id="${cat}-${i}">
             <table>
               <tr><td>Description</td><td>${escapeHtml(check.description)}</td></tr>
-              ${check.expected ? `<tr><td>Expected</td><td><code>${escapeHtml(check.expected)}</code></td></tr>` : ''}
-              ${check.actual ? `<tr><td>Actual</td><td><code>${escapeHtml(check.actual)}</code></td></tr>` : ''}
-              ${check.element ? `<tr><td>Element</td><td><code>${escapeHtml(check.element)}</code></td></tr>` : ''}
-              ${check.details ? `<tr><td>Details</td><td>${escapeHtml(check.details)}</td></tr>` : ''}
-              ${check.helpUrl ? `<tr><td>Help</td><td><a href="${escapeHtml(check.helpUrl)}" target="_blank" rel="noopener">${escapeHtml(check.helpUrl)}</a></td></tr>` : ''}
+              ${check.expected ? `<tr><td>Expected</td><td><code>${escapeHtml(check.expected)}</code></td></tr>` : ""}
+              ${check.actual ? `<tr><td>Actual</td><td><code>${escapeHtml(check.actual)}</code></td></tr>` : ""}
+              ${check.element ? `<tr><td>Element</td><td><code>${escapeHtml(check.element)}</code></td></tr>` : ""}
+              ${check.details ? `<tr><td>Details</td><td>${escapeHtml(check.details)}</td></tr>` : ""}
+              ${check.helpUrl ? `<tr><td>Help</td><td><a href="${escapeHtml(check.helpUrl)}" target="_blank" rel="noopener">${escapeHtml(check.helpUrl)}</a></td></tr>` : ""}
             </table>
           </div>
         </div>
-        `).join('')}
+        `,
+          )
+          .join("")}
       </div>
     </div>`;
-    }).join('')}
+      })
+      .join("")}
 
     <footer>
-      Generated by <a href="https://github.com/YOUR_USERNAME/web-quality-audit">web-quality-audit</a>
+      Generated by <a href="https://github.com/yDkay/web-quality-audit">web-quality-audit</a>
     </footer>
   </div>
 
@@ -510,25 +537,26 @@ function generateHtml(data: RawAuditData): string {
 
 function escapeHtml(str: string): string {
   return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 // ──────────────────────────────────────────────
 // MAIN
 // ──────────────────────────────────────────────
 
-const outputDir = process.env.AUDIT_OUTPUT_DIR || path.join(__dirname, '..', '..', 'reports');
+const outputDir =
+  process.env.AUDIT_OUTPUT_DIR || path.join(__dirname, "..", "..", "reports");
 const data = loadResults(outputDir);
 
 if (data) {
   const html = generateHtml(data);
-  const reportPath = path.join(outputDir, 'audit-report.html');
+  const reportPath = path.join(outputDir, "audit-report.html");
   fs.writeFileSync(reportPath, html);
   console.log(`\n📊 Report generated: ${reportPath}\n`);
 } else {
-  console.log('No data to generate report from.');
+  console.log("No data to generate report from.");
   process.exit(1);
 }

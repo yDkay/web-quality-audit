@@ -4,13 +4,14 @@ A comprehensive website quality audit tool that checks **accessibility**, **SEO*
 
 Every check is implemented in both frameworks, running the same assertions against the same demo page, producing a unified HTML report. Built with **TypeScript**, **axe-core**, and a custom CLI.
 
-![CI](https://github.com/YOUR_USERNAME/web-quality-audit/actions/workflows/audit.yml/badge.svg)
+![CI](https://github.com/yDkay/web-quality-audit/actions/workflows/audit.yml/badge.svg)
 
 ---
 
 ## What it checks
 
 ### Accessibility (WCAG 2.1 AA/AAA)
+
 - Color contrast ratios with exact values and required thresholds
 - Missing or non-descriptive image alt text
 - Form inputs without associated labels
@@ -22,6 +23,7 @@ Every check is implemented in both frameworks, running the same assertions again
 - Full axe-core WCAG 2.1 AA automated scan
 
 ### SEO
+
 - Meta title and description (presence and length)
 - Open Graph and Twitter Card tags
 - Canonical URL
@@ -32,6 +34,7 @@ Every check is implemented in both frameworks, running the same assertions again
 - Image dimensions and lazy loading
 
 ### Best Practices
+
 - Broken links and broken images
 - CTA visibility above the fold
 - Console errors and warnings
@@ -48,14 +51,14 @@ Every check is implemented in both frameworks, running the same assertions again
 
 The same 30+ checks are implemented in both Cypress and Playwright. Both save results in the same JSON format, so they produce a single unified HTML report.
 
-| Aspect | Cypress | Playwright |
-|---|---|---|
-| Test style | Command chaining (`cy.get().then()`) | Async/await (`page.evaluate()`) |
-| Waiting | Implicit (built into `cy.get`) | Explicit (`await`) |
-| Custom logic | Commands in global namespace | Typed fixtures via `test.extend` |
-| axe-core | `cypress-axe` | `@axe-core/playwright` |
-| Browser support | Chrome, Electron, Firefox, Edge | Chromium, Firefox, WebKit |
-| Config | `cypress.config.ts` | `playwright.config.ts` |
+| Aspect          | Cypress                              | Playwright                       |
+| --------------- | ------------------------------------ | -------------------------------- |
+| Test style      | Command chaining (`cy.get().then()`) | Async/await (`page.evaluate()`)  |
+| Waiting         | Implicit (built into `cy.get`)       | Explicit (`await`)               |
+| Custom logic    | Commands in global namespace         | Typed fixtures via `test.extend` |
+| axe-core        | `cypress-axe`                        | `@axe-core/playwright`           |
+| Browser support | Chrome, Electron, Firefox, Edge      | Chromium, Firefox, WebKit        |
+| Config          | `cypress.config.ts`                  | `playwright.config.ts`           |
 
 ---
 
@@ -63,7 +66,7 @@ The same 30+ checks are implemented in both Cypress and Playwright. Both save re
 
 ```bash
 # Clone and install
-git clone https://github.com/YOUR_USERNAME/web-quality-audit.git
+git clone https://github.com/yDkay/web-quality-audit.git
 cd web-quality-audit
 npm install
 npx playwright install chromium   # only needed for Playwright
@@ -108,18 +111,18 @@ Options:
 Create or edit `audit.config.ts` in the project root:
 
 ```typescript
-import { AuditConfig } from './src/types';
+import { AuditConfig } from "./src/types";
 
 const config: AuditConfig = {
-  url: 'https://your-site.com',
-  categories: ['accessibility', 'seo', 'best-practices'],
+  url: "https://your-site.com",
+  categories: ["accessibility", "seo", "best-practices"],
   viewports: [
-    { name: 'mobile', width: 375, height: 812 },
-    { name: 'tablet', width: 768, height: 1024 },
-    { name: 'desktop', width: 1280, height: 720 },
+    { name: "mobile", width: 375, height: 812 },
+    { name: "tablet", width: 768, height: 1024 },
+    { name: "desktop", width: 1280, height: 720 },
   ],
-  outputDir: 'reports',
-  reportFormat: 'both',
+  outputDir: "reports",
+  reportFormat: "both",
 };
 
 export default config;
@@ -159,6 +162,7 @@ quality (lint + typecheck)
 ```
 
 Features:
+
 - Parallel jobs per framework and category
 - `workflow_dispatch` to audit any URL manually
 - Scheduled cron every Monday at 08:00 UTC
@@ -207,20 +211,20 @@ web-quality-audit/
 
 ## npm scripts
 
-| Script | Description |
-|---|---|
-| `npm run audit` | Run audit via CLI (supports `--framework`, `--url`, etc.) |
-| `npm run audit:accessibility` | Audit accessibility only (Cypress) |
-| `npm run audit:seo` | Audit SEO only (Cypress) |
-| `npm run audit:best-practices` | Audit best practices only (Cypress) |
-| `npm run cy:open` | Open Cypress interactive runner |
-| `npm run cy:run` | Run all Cypress specs |
-| `npm run pw:run` | Run all Playwright specs |
-| `npm run pw:run:ui` | Open Playwright UI mode |
-| `npm run pw:report` | Open last Playwright HTML report |
-| `npm run demo` | Serve demo page on port 3939 |
-| `npm run report` | Regenerate HTML report from existing data |
-| `npm run typecheck` | Run TypeScript compiler check |
+| Script                         | Description                                               |
+| ------------------------------ | --------------------------------------------------------- |
+| `npm run audit`                | Run audit via CLI (supports `--framework`, `--url`, etc.) |
+| `npm run audit:accessibility`  | Audit accessibility only (Cypress)                        |
+| `npm run audit:seo`            | Audit SEO only (Cypress)                                  |
+| `npm run audit:best-practices` | Audit best practices only (Cypress)                       |
+| `npm run cy:open`              | Open Cypress interactive runner                           |
+| `npm run cy:run`               | Run all Cypress specs                                     |
+| `npm run pw:run`               | Run all Playwright specs                                  |
+| `npm run pw:run:ui`            | Open Playwright UI mode                                   |
+| `npm run pw:report`            | Open last Playwright HTML report                          |
+| `npm run demo`                 | Serve demo page on port 3939                              |
+| `npm run report`               | Regenerate HTML report from existing data                 |
+| `npm run typecheck`            | Run TypeScript compiler check                             |
 
 ---
 
