@@ -1,8 +1,8 @@
 # 🔍 web-quality-audit
 
-A comprehensive website quality audit tool that checks **accessibility**, **SEO**, and **best practices** using real browser automation with both **Cypress** and **Playwright**.
+A website quality audit tool that checks **accessibility**, **SEO**, and **best practices** through real browser automation with both **Cypress** and **Playwright**.
 
-Every check is implemented in both frameworks, running the same assertions against the same demo page, producing a unified HTML report. Built with **TypeScript**, **axe-core**, and a custom CLI.
+Every check is implemented in both frameworks, producing a unified HTML report from the same set of assertions. Built with **TypeScript**, **axe-core**, and a custom CLI.
 
 ![CI](https://github.com/yDkay/web-quality-audit/actions/workflows/audit.yml/badge.svg)
 
@@ -12,44 +12,43 @@ Every check is implemented in both frameworks, running the same assertions again
 
 ### Accessibility (WCAG 2.1 AA/AAA)
 
-- Color contrast ratios with exact values and required thresholds
-- Missing or non-descriptive image alt text
+- Color contrast ratios with exact values and thresholds
+- Missing or non-descriptive image `alt` text
 - Form inputs without associated labels
-- Heading hierarchy violations (skipped levels, missing H1)
-- Touch target sizes below 44x44px minimum
-- Generic link text ("click here", "read more")
-- Missing `lang` attribute and document title
-- Links opening in new tabs without user warning
+- Heading hierarchy violations (skipped levels, missing `<h1>`)
+- Touch target sizes below the 44x44px minimum
+- Generic link text (e.g., "click here", "read more")
+- Missing `lang` attribute and document `<title>`
+- Links opening in new tabs without warning the user
 - Full axe-core WCAG 2.1 AA automated scan
 
 ### SEO
 
-- Meta title and description (presence and length)
+- Meta title and description — presence and length validation
 - Open Graph and Twitter Card tags
-- Canonical URL
-- Viewport meta tag
+- Canonical URL and viewport meta tag
 - Heading structure for search engines
 - Robots meta directives
 - Structured data (JSON-LD) detection
-- Image dimensions and lazy loading
+- Image `width`/`height` attributes and lazy loading
 
 ### Best Practices
 
 - Broken links and broken images
 - CTA visibility above the fold
 - Console errors and warnings
-- Favicon and Apple touch icon
-- Form usability (autocomplete, correct input types)
-- Mixed content detection (HTTP on HTTPS)
+- Favicon and Apple touch icon presence
+- Form usability — `autocomplete` attributes and correct input types
+- Mixed content detection (HTTP resources on HTTPS pages)
 - `rel="noopener"` on `target="_blank"` links
 - Cookie consent mechanism detection
-- Responsive screenshots (mobile, tablet, desktop)
+- Responsive screenshots at mobile, tablet, and desktop breakpoints
 
 ---
 
 ## Dual-framework architecture
 
-The same 30+ checks are implemented in both Cypress and Playwright. Both save results in the same JSON format, so they produce a single unified HTML report.
+All 30+ checks are implemented in both Cypress and Playwright. Both frameworks save results in the same JSON format, merging into a single unified HTML report.
 
 | Aspect          | Cypress                              | Playwright                       |
 | --------------- | ------------------------------------ | -------------------------------- |
@@ -134,21 +133,20 @@ CLI flags always override the config file.
 
 ## HTML Report
 
-After each audit run, a self-contained HTML report is generated at `reports/audit-report.html`:
+Each audit run generates a self-contained HTML report at `reports/audit-report.html`:
 
-- Overall score and per-category scores (0-100)
-- Pass/fail/warning counts
-- Filter buttons (All, Failed, Passed, Critical, Warning)
-- Expandable details per check with element references and help links
-- Dark theme, responsive layout
+- Overall and per-category scores (0-100)
+- Pass/fail/warning counts with filter buttons
+- Expandable details per check, including element references and help links
+- Dark theme with responsive layout
 
-Both Cypress and Playwright results merge into the same report. The report shows which framework produced each result.
+Cypress and Playwright results merge into a single report, clearly labeling which framework produced each result.
 
 ---
 
 ## CI/CD
 
-The GitHub Actions workflow (`.github/workflows/audit.yml`) runs **6 parallel audit jobs** (3 Cypress + 3 Playwright), merges all results, generates the report, and deploys to GitHub Pages.
+The GitHub Actions workflow (`.github/workflows/audit.yml`) runs **6 parallel jobs** — 3 per framework, one per category — then merges results, generates the report, and deploys it to GitHub Pages.
 
 ```
 quality (lint + typecheck)
@@ -161,13 +159,13 @@ quality (lint + typecheck)
        └── report (merge + deploy)
 ```
 
-Features:
+Highlights:
 
-- Parallel jobs per framework and category
-- `workflow_dispatch` to audit any URL manually
-- Scheduled cron every Monday at 08:00 UTC
-- Artifacts retained for 30 days (results) and 90 days (report)
-- GitHub Pages deployment on every push to `main`
+- Parallel execution across frameworks and categories
+- `workflow_dispatch` input to audit any URL on demand
+- Scheduled run every Monday at 08:00 UTC
+- Artifact retention: 30 days for results, 90 days for reports
+- Automatic GitHub Pages deployment on every push to `main`
 
 ---
 
@@ -230,7 +228,7 @@ web-quality-audit/
 
 ## Demo page
 
-The `demo/index.html` page includes 30+ intentional issues across all three categories for testing and development. Run `npm run demo` to serve it locally. Each issue is documented with inline comments.
+The `demo/index.html` page ships with 30+ intentional issues spanning all three audit categories — useful for testing and development. Run `npm run demo` to serve it locally. Each issue is documented with inline comments in the source.
 
 ---
 
